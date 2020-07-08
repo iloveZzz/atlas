@@ -23,9 +23,10 @@ define(['require',
     'utils/Utils',
     'utils/CommonViewFunction',
     'utils/Enums',
+    'utils/Globals',
     'query-builder',
     'daterangepicker'
-], function(require, Backbone, QueryBuilderTmpl, UserDefineTmpl, Utils, CommonViewFunction, Enums) {
+], function(require, Backbone, QueryBuilderTmpl, UserDefineTmpl, Utils, CommonViewFunction, Enums, Globals) {
 
     var QueryBuilderView = Backbone.Marionette.LayoutView.extend(
         /** @lends QueryBuilderView */
@@ -138,7 +139,7 @@ define(['require',
                     return obj;
                 }
                 /* Status / __state */
-                if (isSystemAttr && attrObj.name === "Status" || isSystemAttr && attrObj.name === "__state") {
+                if (isSystemAttr && attrObj.name === "Status" || isSystemAttr && attrObj.name === "__state" || isSystemAttr && attrObj.name === "__entityStatus") {
                     obj.label = (Enums.systemAttributes[attrObj.name] ? Enums.systemAttributes[attrObj.name] : _.escape(attrObj.name.capitalize())) + " (enum)";
                     obj['input'] = 'select';
                     obj['values'] = ['ACTIVE', 'DELETED'];
@@ -231,7 +232,7 @@ define(['require',
                 if (isSystemAttr && attrObj.name === "__typeName") {
                     var entityType = [];
                     that.typeHeaders.fullCollection.each(function(model) {
-                        if (model.get('category') == 'ENTITY') {
+                        if ((that.type == true && model.get('category') == 'ENTITY') || (that.tag == true && model.get('category') == "CLASSIFICATION")) {
                             entityType.push({
                                 "id": model.get("name"),
                                 "text": model.get("name")
@@ -270,7 +271,7 @@ define(['require',
                         "showDropdowns": true,
                         "timePicker": true,
                         locale: {
-                            format: 'MM/DD/YYYY h:mm A'
+                            format: Globals.dateTimeFormat
                         }
                     };
                     if (rules) {
@@ -355,11 +356,15 @@ define(['require',
                         "__createdBy": 5,
                         "__modifiedBy": 6,
                         "__isIncomplete": 7,
-                        "__state": 8,
                         "__classificationNames": 9,
                         "__propagatedClassificationNames": 10,
                         "__labels": 11,
                         "__customAttributes": 12,
+                    }
+                    if (that.type) {
+                        sortMap["__state"] = 8;
+                    } else {
+                        sortMap["__entityStatus"] = 8;
                     }
                     this.systemAttrArr = _.sortBy(this.systemAttrArr, function(obj) {
                         return sortMap[obj.name]

@@ -28,9 +28,10 @@ define(['require',
     'utils/Enums',
     'utils/Messages',
     'moment',
+    'utils/Globals',
     'moment-timezone',
     'daterangepicker'
-], function(require, AddTagModalViewTmpl, AddTimezoneItemView, VTagList, VCommonList, Modal, VEntity, Utils, UrlLinks, Enums, Messages, moment) {
+], function(require, AddTagModalViewTmpl, AddTimezoneItemView, VTagList, VCommonList, Modal, VEntity, Utils, UrlLinks, Enums, Messages, moment, Globals) {
     'use strict';
 
     var AddTagModel = Backbone.Marionette.CompositeView.extend({
@@ -354,7 +355,7 @@ define(['require',
                         var str = '<option value=""' + (!that.tagModel ? 'selected' : '') + '>-- Select ' + typeName + " --</option>";
                         var enumValue = typeNameValue.get('elementDefs');
                         _.each(enumValue, function(key, value) {
-                            str += '<option ' + ((that.tagModel && key.value === that.tagModel.attributes[name]) ? 'selected' : '') + '>' + key.value + '</option>';
+                            str += '<option ' + ((that.tagModel && key.value === that.tagModel.attributes[name]) ? 'selected' : '') + '>' + _.escape(key.value) + '</option>';
                         })
                         that.ui.tagAttribute.append('<div class="form-group"><label>' + name + '</label>' + ' (' + typeName + ')' +
                             '<select class="form-control attributeInputVal attrName" data-key="' + name + '">' + str + '</select></div>');
@@ -372,7 +373,7 @@ define(['require',
                             "showDropdowns": true,
                             "timePicker": true,
                             locale: {
-                                format: 'MM/DD/YYYY h:mm A'
+                                format: Globals.dateTimeFormat
                             }
                         };
                         if (that.tagModel) {
@@ -392,7 +393,7 @@ define(['require',
             }
         },
         getElement: function(labelName, typeName) {
-            var value = this.tagModel && this.tagModel.attributes ? (this.tagModel.attributes[labelName] || "") : "",
+            var value = this.tagModel && this.tagModel.attributes ? (this.tagModel.attributes[_.unescape(labelName)] || "") : "",
                 isTypeNumber = typeName === "int" || typeName === "byte" || typeName === "short" || typeName === "double" || typeName === "float",
                 inputClassName = "form-control attributeInputVal attrName";
             if (isTypeNumber) {
@@ -404,7 +405,7 @@ define(['require',
                     '<option value="true">true</option>' +
                     '<option value="false">false</option></select>';
             } else {
-                return '<input type="text" value="' + value + '" class="' + inputClassName + '" data-key="' + labelName + '" data-type="' + typeName + '"/>';
+                return '<input type="text" value="' + _.escape(value) + '" class="' + inputClassName + '" data-key="' + labelName + '" data-type="' + typeName + '"/>';
             }
 
         },

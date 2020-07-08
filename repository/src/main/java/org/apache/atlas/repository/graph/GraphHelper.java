@@ -150,21 +150,18 @@ public final class GraphHelper {
     }
 
     public AtlasEdge getOrCreateEdge(AtlasVertex outVertex, AtlasVertex inVertex, String edgeLabel) throws RepositoryException {
+        AtlasPerfMetrics.MetricRecorder metric = RequestContext.get().startMetricRecord("getOrCreateEdge");
+
         for (int numRetries = 0; numRetries < maxRetries; numRetries++) {
             try {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Running edge creation attempt {}", numRetries);
                 }
 
-                Iterator<AtlasEdge> edges = getAdjacentEdgesByLabel(inVertex, AtlasEdgeDirection.IN, edgeLabel);
-
-                while (edges.hasNext()) {
-                    AtlasEdge edge = edges.next();
-                    if (edge.getOutVertex().getId().equals(outVertex.getId())) {
-                        Id.EntityState edgeState = getState(edge);
-                        if (edgeState == null || edgeState == Id.EntityState.ACTIVE) {
-                            return edge;
-                        }
+                if (inVertex.hasEdges(AtlasEdgeDirection.IN, edgeLabel) && outVertex.hasEdges(AtlasEdgeDirection.OUT, edgeLabel)) {
+                    AtlasEdge edge = graph.getEdgeBetweenVertices(outVertex, inVertex, edgeLabel);
+                    if (edge != null) {
+                        return edge;
                     }
                 }
 
@@ -186,6 +183,8 @@ public final class GraphHelper {
                 }
             }
         }
+
+        RequestContext.get().endMetricRecord(metric);
         return null;
     }
 
@@ -408,22 +407,8 @@ public final class GraphHelper {
         return ret;
     }
 
-    public static List<AtlasEdge> getIncomingClassificationEdges(AtlasVertex classificationVertex) {
-        List<AtlasEdge> ret                = new ArrayList<>();
-        String          classificationName = getTypeName(classificationVertex);
-        Iterable        edges              = classificationVertex.query().direction(AtlasEdgeDirection.IN).label(CLASSIFICATION_LABEL)
-                                                                 .has(CLASSIFICATION_EDGE_NAME_PROPERTY_KEY, classificationName).edges();
-        if (edges != null) {
-            Iterator<AtlasEdge> iterator = edges.iterator();
-
-            while (iterator.hasNext()) {
-                AtlasEdge edge = iterator.next();
-
-                ret.add(edge);
-            }
-        }
-
-        return ret;
+    public static boolean hasEntityReferences(AtlasVertex classificationVertex) {
+        return classificationVertex.hasEdges(AtlasEdgeDirection.IN, CLASSIFICATION_LABEL);
     }
 
     public static List<AtlasVertex> getAllPropagatedEntityVertices(AtlasVertex classificationVertex) {

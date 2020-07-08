@@ -109,13 +109,13 @@ define(['require', 'utils/Utils', 'modules/Modal', 'utils/Messages', 'utils/Enum
                         var newVal = val;
                         if (formatStringVal) {
                             newVal = parseInt(val);
-                            if (newVal === NaN) {
+                            if (_.isNaN(newVal)) {
                                 newVal = val;
                             } else {
                                 newVal = numberFormat(newVal);
                             }
                         }
-                        return getHighlightedString(newVal);
+                        return getHighlightedString(_.escape(newVal));
                     }
                 } else {
                     return "N/A";
@@ -179,7 +179,7 @@ define(['require', 'utils/Utils', 'modules/Modal', 'utils/Messages', 'utils/Enum
                     if (_.isString(inputOutputField) || _.isBoolean(inputOutputField) || _.isNumber(inputOutputField)) {
                         var tempVarfor$check = inputOutputField.toString();
                         if (tempVarfor$check.indexOf("$") == -1) {
-                            valueOfArray.push('<span class="json-string">' + getValue(_.escape(inputOutputField)) + '</span>');
+                            valueOfArray.push('<span class="json-string">' + getValue(inputOutputField) + '</span>');
                         }
                     } else if (_.isObject(inputOutputField) && !id) {
                         var attributesList = inputOutputField;
@@ -220,7 +220,11 @@ define(['require', 'utils/Utils', 'modules/Modal', 'utils/Messages', 'utils/Enum
                             fetchInputOutputValue(fetchId, defEntity);
                             tempLink += '<div data-id="' + fetchId + '"><div class="value-loader"></div></div>';
                         } else {
-                            tempLink += '<a href="#!/detailPage/' + id + '">' + getValue(name) + '</a>'
+                            if (inputOutputField.typeName == "AtlasGlossaryTerm") {
+                                tempLink += '<a href="#!/glossary/' + id + '?guid=' + id + '&gType=term&viewType=term&fromView=entity">' + name + '</a>'
+                            } else {
+                                tempLink += '<a href="#!/detailPage/' + id + '">' + name + '</a>'
+                            }
                         }
                     }
                     if (readOnly) {
@@ -250,8 +254,6 @@ define(['require', 'utils/Utils', 'modules/Modal', 'utils/Messages', 'utils/Enum
             valueObjectKeysList = _.sortBy(valueObjectKeysList);
         }
         valueObjectKeysList.map(function(key) {
-
-            key = _.escape(key);
             if (key == "profileData") {
                 return;
             }
@@ -273,12 +275,14 @@ define(['require', 'utils/Utils', 'modules/Modal', 'utils/Messages', 'utils/Enum
             var val = "";
             if (_.isObject(valueObject[key])) {
                 val = keyValue
-            } else if (Utils.isUrl(keyValue)) {
-                val = '<a target="_blank" class="blue-link" href="' + keyValue + '">' + getValue(keyValue) + '</a>';
             } else if (key === 'guid' || key === "__guid") {
-                val = '<a title="' + key + '" href="#!/detailPage/' + keyValue + '">' + getValue(keyValue) + '</a>';
+                if (options.fromAdminAudit) {
+                    val = getValue(keyValue);
+                } else {
+                    val = '<a title="' + key + '" href="#!/detailPage/' + _.escape(keyValue) + '">' + getValue(keyValue) + '</a>';
+                }
             } else {
-                val = getValue(_.escape(keyValue));
+                val = getValue(keyValue);
             }
             if (isTable) {
                 var value = val,
@@ -315,9 +319,9 @@ define(['require', 'utils/Utils', 'modules/Modal', 'utils/Messages', 'utils/Enum
                 var className = "btn btn-action btn-sm btn-blue btn-icon",
                     deleteIcon = "";
                 if (obj.guid === tag.entityGuid) {
-                    deleteIcon = '<i class="fa fa-times" data-id="delete"  data-assetname="' + entityName + '"data-name="' + tag.typeName + '" data-type="tag" data-guid="' + obj.guid + '" ></i>';
+                    deleteIcon = '<i class="fa fa-times" data-id="delete"  data-assetname="' + entityName + '" data-name="' + tag.typeName + '" data-type="tag" data-guid="' + obj.guid + '" ></i>';
                 } else if (obj.guid !== tag.entityGuid && tag.entityStatus === "DELETED") {
-                    deleteIcon = '<i class="fa fa-times" data-id="delete"  data-assetname="' + entityName + '"data-name="' + tag.typeName + '" data-type="tag" data-entityguid="' + tag.entityGuid + '" data-guid="' + obj.guid + '" ></i>';
+                    deleteIcon = '<i class="fa fa-times" data-id="delete"  data-assetname="' + entityName + '" data-name="' + tag.typeName + '" data-type="tag" data-entityguid="' + tag.entityGuid + '" data-guid="' + obj.guid + '" ></i>';
                 } else {
                     className += " propagte-classification";
                 }
@@ -351,9 +355,10 @@ define(['require', 'utils/Utils', 'modules/Modal', 'utils/Messages', 'utils/Enum
             entityName = Utils.getName(obj);
         if (terms) {
             terms.map(function(term) {
+                var displayText = _.escape(term.displayText);
                 var className = "btn btn-action btn-sm btn-blue btn-icon",
-                    deleteIcon = '<i class="fa fa-times" data-id="delete"  data-assetname="' + entityName + '"data-name="' + term.displayText + '" data-type="term" data-guid="' + obj.guid + '" data-termGuid="' + term.termGuid + '" ></i>',
-                    termString = '<a class="' + className + '" data-id="termClick"><span title="' + _.escape(term.displayText) + '">' + _.escape(term.displayText) + '</span>' + deleteIcon + '</a>';
+                    deleteIcon = '<i class="fa fa-times" data-id="delete"  data-assetname="' + entityName + '" data-name="' + displayText + '" data-type="term" data-guid="' + obj.guid + '" data-termGuid="' + term.termGuid + '" ></i>',
+                    termString = '<a class="' + className + '" data-id="termClick"><span title="' + displayText + '">' + displayText + '</span>' + deleteIcon + '</a>';
                 if (count >= 1) {
                     popTerm += termString;
                 } else {
@@ -631,13 +636,13 @@ define(['require', 'utils/Utils', 'modules/Modal', 'utils/Messages', 'utils/Enum
                                 rule = {};
                             if (apiObj) {
                                 rule = { attributeName: temp[0], operator: mapUiOperatorToAPI(temp[1]), attributeValue: _.trim(temp[2]) }
-                                rule.attributeValue = rule.type === 'date' && formatDate && rule.attributeValue.length ? moment(parseInt(rule.attributeValue)).format('MM/DD/YYYY h:mm A') : rule.attributeValue;
+                                rule.attributeValue = rule.type === 'date' && formatDate && rule.attributeValue.length ? moment(parseInt(rule.attributeValue)).format(Globals.dateTimeFormat) : rule.attributeValue;
                             } else {
                                 rule = { id: temp[0], operator: temp[1], value: _.trim(temp[2]) }
                                 if (temp[3]) {
                                     rule['type'] = temp[3];
                                 }
-                                rule.value = rule.type === 'date' && formatDate && rule.value.length ? moment(parseInt(rule.value)).format('MM/DD/YYYY h:mm A') : rule.value;
+                                rule.value = rule.type === 'date' && formatDate && rule.value.length ? moment(parseInt(rule.value)).format(Globals.dateTimeFormat) : rule.value;
                             }
                             return rule;
                         }
@@ -938,9 +943,14 @@ define(['require', 'utils/Utils', 'modules/Modal', 'utils/Messages', 'utils/Enum
             pEl.innerText = "";
 
             if (val === '') {
-                classes = 'form-control errorClass';
                 validation = false;
                 pEl.innerText = 'Required!';
+            } else if (val.includes(':')) {
+                validation = false;
+                var errorText = $(".errorMsg[data-id='charSupportMsg']").text();
+                if (errorText && errorText.length === 0) {
+                    pEl.innerText = "These special character '(:)' are not supported.";
+                }
             } else {
                 if (input.tagName === 'INPUT') {
                     var duplicates = datalist.filter(function(c) {
@@ -954,6 +964,9 @@ define(['require', 'utils/Utils', 'modules/Modal', 'utils/Messages', 'utils/Enum
                         keyMap.set(val, val);
                     }
                 }
+            }
+            if (validation === false) {
+                classes = 'form-control errorClass';
             }
             input.setAttribute('class', classes);
         }

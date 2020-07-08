@@ -85,7 +85,7 @@ define(['require',
                 };
                 events["click " + this.ui.importGlossary] = 'onClickImportGlossary';
                 events["keyup " + this.ui.searchTerm] = function() {
-                    this.ui.termTree.jstree("search", this.ui.searchTerm.val());
+                    this.ui.termTree.jstree("search", _.escape(this.ui.searchTerm.val()));
                 };
                 events["keyup " + this.ui.searchCategory] = function() {
                     this.ui.categoryTree.jstree("search", this.ui.searchCategory.val());
@@ -707,12 +707,17 @@ define(['require',
                                 }) : null,
                                 updateTabState: true
                             });
+                        },
+                        complete: function() {
+                            that.notificationModal.hideButtonLoader();
+                            that.notificationModal.remove();
                         }
                     },
                     notifyObj = {
                         modal: true,
-                        ok: function(argument) {
-                            that.changeLoaderState(true);
+                        ok: function(obj) {
+                            that.notificationModal = obj;
+                            obj.showButtonLoader();
                             if (type == "Glossary") {
                                 that.glossaryCollection.fullCollection.get(guid).destroy(options, { silent: true, reset: false });
                             } else if (type == "GlossaryCategory") {
@@ -720,8 +725,8 @@ define(['require',
                             } else if (type == "GlossaryTerm") {
                                 new that.glossaryCollection.model().deleteTerm(guid, options);
                             }
-                            that.changeLoaderState(false);
                         },
+                        okCloses: false,
                         cancel: function(argument) {}
                     };
                 if (type == "Glossary") {

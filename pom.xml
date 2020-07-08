@@ -123,8 +123,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization></organization>
+            <!--<organizationUrl></organizationUrl>-->
         </developer>
         <developer>
             <id>acmurthy</id>
@@ -135,8 +135,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization>Cloudera Inc.</organization>
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>ayubpathan</id>
@@ -147,8 +147,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization>Cloudera Inc.</organization>
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>amestry</id>
@@ -158,8 +158,8 @@
             <roles>
                 <role>committer</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization>Cloudera Inc.</organization>
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>bstortz</id>
@@ -176,14 +176,14 @@
         <developer>
             <id>chyzer</id>
             <name>Chris Hyzer</name>
-            <email>chyzer@aetna.com</email>
+            <email>tjbchris@apache.org</email>
             <timezone>America/New_York</timezone>
             <roles>
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Aetna Inc.</organization>
-            <!--<organizationUrl>https://www.aetna.com</organizationUrl>-->
+            <organization>Travelers Inc.</organization>
+            <!--<organizationUrl>http://www.travelers.com</organizationUrl>-->
         </developer>
         <developer>
             <id>dmarkwat</id>
@@ -269,14 +269,14 @@
         <developer>
             <id>gsenia</id>
             <name>Greg Senia</name>
-            <email>gsenia@aetna.com</email>
+            <email>gsenia@apache.org</email>
             <timezone>America/New_York</timezone>
             <roles>
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Aetna Inc.</organization>
-            <!--<organizationUrl>https://www.aetna.com</organizationUrl>-->
+            <organization>New York Life Insurance</organization>
+            <!--<organizationUrl>http://www.newyorklife.com</organizationUrl>-->
         </developer>
         <developer>
             <id>rhbutani</id>
@@ -288,7 +288,7 @@
                 <role>PMC</role>
             </roles>
             <organization/>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>yhemanth</id>
@@ -299,8 +299,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization>Cloudera Inc.</organization>
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>ilasek</id>
@@ -335,8 +335,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization>Cloudera Inc.</organization>
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>jmaron</id>
@@ -380,8 +380,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization>Cloudera Inc.</organization>
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>mandy</id>
@@ -437,8 +437,8 @@
             <roles>
                 <role>committer</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization>Cloudera Inc.</organization>
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>sarath</id>
@@ -449,8 +449,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization>Cloudera Inc.</organization>
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>shwethags</id>
@@ -461,8 +461,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization>Cloudera Inc.</organization>
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>sriksun</id>
@@ -485,8 +485,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization>Cloudera Inc.</organization>
+            <!--<organizationUrl>https://www.cloudera.com</organizationUrl>-->
         </developer>
         <developer>
             <id>ssuresh</id>
@@ -497,8 +497,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization></organization>
+            <!--<organizationUrl></organizationUrl>-->
         </developer>
         <developer>
             <id>tbeerbower</id>
@@ -520,8 +520,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization></organization>
+            <!--<organizationUrl></organizationUrl>-->
         </developer>
         <developer>
             <id>venkatesh</id>
@@ -543,8 +543,8 @@
                 <role>committer</role>
                 <role>PMC</role>
             </roles>
-            <organization>Hortonworks Inc.</organization>
-            <!--<organizationUrl>https://www.hortonworks.com</organizationUrl>-->
+            <organization></organization>
+            <!--<organizationUrl></organizationUrl>-->
         </developer>
     </developers>
 
@@ -682,7 +682,7 @@
         <fastutil.version>6.5.16</fastutil.version>
         <guice.version>4.1.0</guice.version>
         <spring.version>4.3.20.RELEASE</spring.version>
-        <spring.security.version>4.2.13.RELEASE</spring.security.version>
+        <spring.security.version>4.2.16.RELEASE</spring.security.version>
 
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <guava.version>25.1-jre</guava.version>
@@ -800,6 +800,7 @@
         <module>addons/hbase-testing-util</module>
         <module>addons/kafka-bridge</module>
         <module>tools/classification-updater</module>
+        <module>tools/atlas-index-repair</module>
         <module>addons/impala-hook-api</module>
         <module>addons/impala-bridge-shim</module>
         <module>addons/impala-bridge</module>
@@ -1573,7 +1574,7 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
-                <version>4.5.3</version>
+                <version>4.5.4</version>
             </dependency>
 
             <dependency>

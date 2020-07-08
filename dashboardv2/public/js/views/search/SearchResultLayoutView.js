@@ -147,7 +147,7 @@ define(['require',
              * @constructs
              */
             initialize: function(options) {
-                _.extend(this, _.pick(options, 'value', 'guid', 'initialView', 'isTypeTagNotExists', 'classificationDefCollection', 'entityDefCollection', 'typeHeaders', 'searchVent', 'enumDefCollection', 'tagCollection', 'searchTableColumns', 'isTableDropDisable', 'fromView', 'glossaryCollection', 'termName', 'businessMetadataDefCollection'));
+                _.extend(this, _.pick(options, 'value', 'guid', 'initialView', 'isTypeTagNotExists', 'classificationDefCollection', 'entityDefCollection', 'typeHeaders', 'searchVent', 'enumDefCollection', 'tagCollection', 'searchTableColumns', 'isTableDropDisable', 'fromView', 'glossaryCollection', 'termName', 'businessMetadataDefCollection', 'profileDBView'));
                 this.entityModel = new VEntity();
                 this.searchCollection = new VSearchList();
                 this.limit = 25;
@@ -250,7 +250,7 @@ define(['require',
                     collection: this.searchCollection,
                     includePagination: false,
                     includeFooterRecords: false,
-                    includeColumnManager: (Utils.getUrlState.isSearchTab() && this.value && this.value.searchType === "basic" && !this.value.profileDBView ? true : false),
+                    includeColumnManager: (Utils.getUrlState.isSearchTab() && this.value && this.value.searchType === "basic" && !this.profileDBView ? true : false),
                     includeOrderAbleColumns: false,
                     includeSizeAbleColumns: false,
                     includeTableLoader: false,
@@ -486,7 +486,8 @@ define(['require',
                         if (dataLength > 0) {
                             that.$('.searchTable').removeClass('noData')
                         }
-                        if (Utils.getUrlState.isSearchTab() && value && !value.profileDBView) {
+
+                        if (Utils.getUrlState.isSearchTab() && value && !that.profileDBView) {
                             var searchString = 'Results for: <span class="filterQuery">' + CommonViewFunction.generateQueryOfFilter(that.value) + "</span>";
                             if (Globals.entityCreate && Globals.entityTypeConfList && Utils.getUrlState.isSearchTab()) {
                                 searchString += "<p>If you do not find the entity in search result below then you can" + '<a href="javascript:void(0)" data-id="createEntity"> create new entity</a></p>';
@@ -510,7 +511,7 @@ define(['require',
                         this.searchCollection.url = UrlLinks.searchApiUrl(value.searchType);
                     }
                     _.extend(this.searchCollection.queryParams, { 'limit': this.limit, 'offset': this.offset, 'query': _.trim(value.query), 'typeName': value.type || null, 'classification': value.tag || null, 'termName': value.term || null });
-                    if (value.profileDBView && value.typeName && value.guid) {
+                    if (this.profileDBView && value.typeName && value.guid) {
                         var profileParam = {};
                         profileParam['guid'] = value.guid;
                         profileParam['relation'] = value.typeName === 'hive_db' ? '__hive_table.db' : '__hbase_table.namespace';
@@ -520,12 +521,12 @@ define(['require',
                     }
                     if (isPostMethod) {
                         this.searchCollection.filterObj = _.extend({}, filterObj);
-                        apiObj['data'] = _.extend(checkBoxValue, filterObj, _.pick(this.searchCollection.queryParams, 'query', 'excludeDeletedEntities', 'limit', 'offset', 'typeName', 'classification', 'termName'))
+                        apiObj['data'] = _.extend(checkBoxValue, filterObj, _.pick(this.searchCollection.queryParams, 'query', 'excludeDeletedEntities', 'limit', 'offset', 'typeName', 'classification', 'termName'));
                         Globals.searchApiCallRef = this.searchCollection.getBasicRearchResult(apiObj);
                     } else {
                         apiObj.data = null;
                         this.searchCollection.filterObj = null;
-                        if (this.value.profileDBView) {
+                        if (this.profileDBView) {
                             _.extend(this.searchCollection.queryParams, checkBoxValue);
                         }
                         Globals.searchApiCallRef = this.searchCollection.fetch(apiObj);
@@ -537,7 +538,7 @@ define(['require',
                         Globals.searchApiCallRef = this.searchCollection.getBasicRearchResult(apiObj);
                     } else {
                         apiObj.data = null;
-                        if (this.value.profileDBView) {
+                        if (this.profileDBView) {
                             _.extend(this.searchCollection.queryParams, checkBoxValue);
                         }
                         Globals.searchApiCallRef = this.searchCollection.fetch(apiObj);
@@ -655,7 +656,7 @@ define(['require',
 
 
                 col['name'] = {
-                    label: this.value && this.value.profileDBView ? "Table Name" : "Name",
+                    label: this.value && this.profileDBView ? "Table Name" : "Name",
                     cell: "html",
                     editable: false,
                     resizeable: true,
@@ -710,12 +711,8 @@ define(['require',
                                         }
                                     });
                             }
-                            var img = "",
-                                isIncompleteClass = "isIncomplete search-result-page";
-                            if (obj.isIncomplete === true) {
-                                isIncompleteClass += " show";
-                            }
-                            img = "<div class='" + isIncompleteClass + "'><img data-imgGuid='" + obj.guid + "' class='searchTableLogoLoader'><i class='fa fa-hourglass-half'></i></div>";
+                            var img = "";
+                            img = "<div><img data-imgGuid='" + obj.guid + "' class='searchTableLogoLoader'></div>";
                             getImageData({ imagePath: Utils.getEntityIconPath({ entityData: obj }) });
                             return (img + nameHtml);
                         }
@@ -738,7 +735,7 @@ define(['require',
                         }
                     })
                 };
-                if (this.value && this.value.profileDBView) {
+                if (this.value && this.profileDBView) {
                     col['createTime'] = {
                         label: "Date Created",
                         cell: "Html",
@@ -755,7 +752,7 @@ define(['require',
                         })
                     }
                 }
-                if (this.value && !this.value.profileDBView) {
+                if (this.value && !this.profileDBView) {
                     col['description'] = {
                         label: "Description",
                         cell: "String",
@@ -879,7 +876,7 @@ define(['require',
                                                         if (values[values.length - 1] === "") { values.pop(); }
                                                         if (values[0] === "") { values.shift(); }
                                                         _.each(values, function(names) {
-                                                            valueOfArray.push('<span class="json-string"><a class="btn btn-action btn-sm btn-blue btn-icon" ><span title="" data-original-title="' + names + '" >' + names + '</span></a></span>');
+                                                            valueOfArray.push('<span class="json-string"><a class="btn btn-action btn-sm btn-blue btn-icon" ><span>' + _.escape(names) + '</span></a></span>');
                                                         });
                                                         return valueOfArray.join(' ');
                                                     }
@@ -889,7 +886,7 @@ define(['require',
                                                         valueOfArray = [];
                                                     if (customAttributes) {
                                                         _.each(Object.keys(customAttributes), function(value, index) {
-                                                            valueOfArray.push('<span class="json-string"><a class="btn btn-action btn-sm btn-blue btn-icon" ><span title="" data-original-title="' + value + ' : ' + Object.values(customAttributes)[index] + '" ><span>' + value + '</span> : <span>' + Object.values(customAttributes)[index] + '</span></span></a></span>');
+                                                            valueOfArray.push('<span class="json-string"><a class="btn btn-action btn-sm btn-blue btn-icon" ><span><span>' + _.escape(value) + '</span> : <span>' + _.escape(Object.values(customAttributes)[index]) + '</span></span></a></span>');
                                                         });
                                                         return valueOfArray.join(' ');
                                                     }
@@ -949,7 +946,7 @@ define(['require',
                                     var modelObj = model.toJSON();
                                     if (key == "name") {
                                         var nameHtml = "",
-                                            name = modelObj[key];
+                                            name = _.escape(modelObj[key]);
                                         if (modelObj.guid) {
                                             nameHtml = '<a title="' + name + '" href="#!/detailPage/' + modelObj.guid + (that.fromView ? "?from=" + that.fromView : "") + '">' + name + '</a>';
                                         } else {
@@ -1139,7 +1136,7 @@ define(['require',
                     tagName: tagName,
                     guid: guid,
                     associatedGuid: guid != entityGuid ? entityGuid : null,
-                    msg: "<div class='ellipsis-with-margin'>Remove: " + "<b>" + _.escape(tagName) + "</b> assignment from" + " " + "<b>" + assetName + " ?</b></div>",
+                    msg: "<div class='ellipsis-with-margin'>Remove: " + "<b>" + _.escape(tagName) + "</b> assignment from <b>" + _.escape(assetName) + " ?</b></div>",
                     titleMessage: Messages.removeTag,
                     okText: "Remove",
                     showLoader: that.showLoader.bind(that),
@@ -1166,7 +1163,7 @@ define(['require',
                         relationshipGuid: termObj.relationGuid
                     },
                     collection: that.glossaryCollection,
-                    msg: "<div class='ellipsis-with-margin'>Remove: " + "<b>" + _.escape(termName) + "</b> assignment from" + " " + "<b>" + assetname + "?</b></div>",
+                    msg: "<div class='ellipsis-with-margin'>Remove: " + "<b>" + _.escape(termName) + "</b> assignment from <b>" + _.escape(assetname) + "?</b></div>",
                     titleMessage: Messages.glossary.removeTermfromEntity,
                     isEntityView: true,
                     buttonText: "Remove",

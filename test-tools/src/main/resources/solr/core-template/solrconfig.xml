@@ -428,6 +428,23 @@
 
     </requestHandler>
 
+    <requestHandler name="/freetext" class="solr.SearchHandler">
+        <!-- default values for query parameters can be specified, these
+             will be overridden by parameters in the request
+          -->
+        <lst name="defaults">
+            <str name="defType">edismax</str>
+            <str name="qf">3eh1_t^3 yrp_t^10 m4l_t^10 kjp_t^10 iyt_t^10 cn9_t^1 x6t_t^3 hdx_t^3 3ksl_s^3 3qbp_s^3 3mdh_s^3 3oqt_s^3 3nyd_t^3 7uv9_t^3 7ldx_t^3</str>
+            <str name="hl.fl">*</str>
+            <bool name="hl.requireFieldMatch">true</bool>
+            <bool name="lowercaseOperators">true</bool>
+            <str name="echoParams">explicit</str>
+            <int name="rows">10</int>
+
+        </lst>
+
+    </requestHandler>
+
   <!-- A request handler that returns indented JSON by default -->
   <requestHandler name="/query" class="solr.SearchHandler">
      <lst name="defaults">
